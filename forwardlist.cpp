@@ -1,14 +1,16 @@
 #include <iostream>
 using namespace std;
 
+template <typename T>
 struct Node {
-    int data;
+    T data;
     Node* next;
 };
 
+template <typename T>
 class List {
 private:
-    Node* head;
+    Node<T>* head;
 
 public:
     List() : head(nullptr) {}
@@ -17,29 +19,35 @@ public:
         clear();
     }
 
-    int front() {
+    T front() {
+        if (empty()) {
+            throw runtime_error("La lista está vacía.");
+        }
         return head->data;
     }
 
-    int back() {
-        Node* temp = head;
+    T back() {
+        if (empty()) {
+            throw runtime_error("La lista está vacía.");
+        }
+        Node<T>* temp = head;
         while (temp->next != nullptr) {
             temp = temp->next;
         }
         return temp->data;
     }
 
-    void push_front(int value) {
-        Node* new_node = new Node{value, head};
+    void push_front(T value) {
+        Node<T>* new_node = new Node<T>{value, head};
         head = new_node;
     }
 
-    void push_back(int value) {
-        Node* new_node = new Node{value, nullptr};
+    void push_back(T value) {
+        Node<T>* new_node = new Node<T>{value, nullptr};
         if (empty()) {
             head = new_node;
         } else {
-            Node* temp = head;
+            Node<T>* temp = head;
             while (temp->next != nullptr) {
                 temp = temp->next;
             }
@@ -47,36 +55,42 @@ public:
         }
     }
 
-    int pop_front() {
-        int value = head->data;
-        Node* temp = head;
+    T pop_front() {
+        if (empty()) {
+            throw runtime_error("La lista está vacía.");
+        }
+        T value = head->data;
+        Node<T>* temp = head;
         head = head->next;
         delete temp;
         return value;
     }
 
-    int pop_back() {
+    T pop_back() {
+        if (empty()) {
+            throw runtime_error("La lista está vacía.");
+        }
         if (head->next == nullptr) {
-            int value = head->data;
+            T value = head->data;
             delete head;
             head = nullptr;
             return value;
         }
-        Node* temp = head;
+        Node<T>* temp = head;
         while (temp->next->next != nullptr) {
             temp = temp->next;
         }
-        int value = temp->next->data;
+        T value = temp->next->data;
         delete temp->next;
         temp->next = nullptr;
         return value;
     }
 
-    int operator[](int index) {
+    T operator[](int index) {
         if (index < 0) {
             throw out_of_range("Índice fuera de rango.");
         }
-        Node* temp = head;
+        Node<T>* temp = head;
         for (int i = 0; i < index; ++i) {
             if (temp == nullptr) {
                 throw out_of_range("Índice fuera de rango.");
@@ -95,7 +109,7 @@ public:
 
     int size() {
         int count = 0;
-        Node* temp = head;
+        Node<T>* temp = head;
         while (temp != nullptr) {
             ++count;
             temp = temp->next;
@@ -116,7 +130,7 @@ public:
         bool swapped;
         do {
             swapped = false;
-            Node* temp = head;
+            Node<T>* temp = head;
             while (temp->next != nullptr) {
                 if (temp->data > temp->next->data) {
                     swap(temp->data, temp->next->data);
@@ -128,9 +142,9 @@ public:
     }
 
     void reverse() {
-        Node* prev = nullptr;
-        Node* current = head;
-        Node* next = nullptr;
+        Node<T>* prev = nullptr;
+        Node<T>* current = head;
+        Node<T>* next = nullptr;
         while (current != nullptr) {
             next = current->next;
             current->next = prev;
@@ -142,7 +156,7 @@ public:
 };
 
 int main() {
-    List myList;
+    List<int> myList;
 
     myList.push_back(5);
     myList.push_back(3);
